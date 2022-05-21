@@ -1,4 +1,4 @@
-const { matchHistoryObj } = require('../slashcommands/valorant');
+const { matchHistoryObj } = require('../slashcommands/valorantmatchhistory');
 
 var page = 0;
 

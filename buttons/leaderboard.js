@@ -1,4 +1,4 @@
-const { leaderboardObj } = require('../slashcommands/valorant');
+const { leaderboardObj } = require('../slashcommands/valorantleaderboard');
 
 var page = 0;
 
