@@ -5,4 +5,28 @@ const getFiles = (path, ending) => {
     return fs.readdirSync(path).filter(f=> f.endsWith(ending))
 }
 
-module.exports = { getFiles }
+const convertDuration = (duration, callback) => {
+    const seconds = duration / 1000
+    let durationSeconds = Math.round(seconds % 60);
+    const durationMinutes = Math.round((seconds - durationSeconds) / 60)
+  
+    if (durationSeconds < 10) {
+      durationSeconds = String(durationSeconds / 10);
+      durationSeconds = durationSeconds[0] + durationSeconds[2]
+    }
+    let newDuration = `${durationMinutes}:${durationSeconds}`
+    callback(newDuration)
+  }
+
+function roundTo(n, digits) {
+    if (digits === undefined) {
+      digits = 0;
+    }
+  
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    var test =(Math.round(n) / multiplicator);
+    return +(test.toFixed(digits));
+  }
+
+module.exports = { getFiles, convertDuration, roundTo }
