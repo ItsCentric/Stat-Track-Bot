@@ -2,8 +2,9 @@ const Discord = require("discord.js");
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require("fs");
+require('dotenv').config();
 
-const DISCORD_CLIENT_TOKEN = process.env["DISCORD_CLIENT_TOKEN"];
+const DISCORD_CLIENT_TOKEN = process.env.DISCORD_CLIENT_TOKEN;
 const client = new Discord.Client({
   intents: [
     "GUILDS"
@@ -61,7 +62,3 @@ rest.put(Routes.applicationGuildCommands(CLIENT_ID, guildID), { body: commands }
 
 
 client.login(DISCORD_CLIENT_TOKEN);
-
-module.exports = {
-  loadSlashCmds
-};

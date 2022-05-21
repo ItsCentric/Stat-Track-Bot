@@ -27,6 +27,9 @@ const run = async (client, interaction) => {
     case 'myaccount':
       GetCurrentAccount(interaction);
       break;
+    case 'serverstatus':
+      getServerStatus(interaction);
+      break;
   }
 
 }
@@ -158,6 +161,47 @@ async function GetCurrentAccount(interaction) {
   await interaction.reply({ embeds: [VALUSERINFO] })
 }
 
+async function getServerStatus(interaction) {
+  let statusRes;
+  let regionString;
+
+  switch(interaction.options.getString('region')) {
+    case 'na':
+      regionString = 'North America';
+      break;
+    case 'eu':
+      regionString = 'Europe';
+      break;
+    case 'kr':
+      regionString = 'Korea';
+      break;
+    case 'ap':
+      regionString = 'Asia-Pacific';
+      break;
+  }
+
+  
+  await valAPI.getStatus(interaction.options.getString('region'))
+  .then(response => statusRes = response.data)
+  .catch(async (err) => {
+    console.error(err);
+    await interaction.reply('Something went wrong, please try again');
+    return;
+  });
+  
+  if (statusRes.maintenances.length === 0 && statusRes.incidents.length === 0) await interaction.reply(`All servers are operational for ${regionString}`)
+  else {
+    const STATUS = new MessageEmbed()
+      .setTitle(`Server Status for ${regionString}`)
+      .addFields(
+        { name: 'Maintenance', value: statusRes.maintenances[0].updates[0].translations[0].content, inline: true },
+        { name: 'Incident', value: statusRes.incidents[0].updates[0].translations[0].content, inline: true }
+      )
+
+    await interaction.reply({ embeds: [STATUS] });
+  }
+
+}
 
 const regionChoices = [
   {
@@ -327,6 +371,37 @@ module.exports = {
       name: 'myaccount',
       description: 'Get the current account',
       type: 1
+    },
+    {
+      name: 'serverstatus',
+      description: 'Get the server status for the specified region',
+      type: 1,
+      options: [
+        {
+          name: 'region',
+          description: 'The region you want the server status for',
+          type: 3,
+          choices: [
+            {
+              name: 'North America',
+              value: 'na'
+            },
+            {
+              name: 'Europe',
+              value: 'eu'
+            },
+            {
+              name: 'Korea',
+              value: 'kr'
+            },
+            {
+              name: 'Asian-Pacific',
+              value: 'ap'
+            }
+          ],
+          required: true
+        }
+      ]
     }
   ],
   run,
